@@ -1,5 +1,8 @@
+require("dotenv").config();
+
 const auth = require("express").Router();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 let users = [];
 
@@ -7,13 +10,27 @@ let users = [];
  *   @param {string} string string to be hashed
  *   @returns {string} hashed string
  */
-function hash(string) {
+const hash = (string) => {
 	return bcrypt.hashSync(string, 10);
-}
+};
+
+/** Creates a JWT
+ *  @param {object} payload payload
+ * @returns {string} JWT Token
+ */
+const create_token = (payload) => {
+	return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+};
+
+/** Verifies JWT authenticity
+ *  @param {string} token JWT token
+ *  @returns {object} token payload
+ */
+const authenticate_token = (token) => {};
 
 //login with bcrypt.compareSync(string, hashedpass)
 
-//register
+//register endpoint
 auth.post("/register", (req, res, next) => {
 	const email = req.body.email;
 	var password = req.body.password;
@@ -32,8 +49,16 @@ auth.post("/register", (req, res, next) => {
 		res.sendStatus(400);
 	else {
 		password = hash(password);
+		let user = { email: email, password: password };
 
-		users.push({ email: email, password: password });
+		const access_token = create_token({ email: email });
+
+		users.push(user);
+
+		res.cookie("LOGIN_INFO", access_token, {
+			httpOnly: true,
+			//secure: true,
+		});
 		res.redirect("/register");
 	}
 
