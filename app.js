@@ -20,25 +20,16 @@ router.get("/api/:endpoint", (req, res, next) => {
 //redirect files other than index
 router.get("/:slug?", (req, res, next) => {
 	console.log(req.params.slug);
-	if (
-		req.params.slug.indexOf(".css") != -1 ||
-		req.params.slug.indexOf(".js") != -1
-	) {
+	const dir =
+		__dirname +
+		"/public/html/" +
+		req.params.slug +
+		(req.params.slug.indexOf(".html") == -1 ? ".html" : "");
+
+	if (req.params.slug.indexOf(".") != -1) {
 		next();
-	} else if (
-		fs.existsSync(
-			__dirname +
-				"/public/html/" +
-				req.params.slug +
-				(req.params.slug.indexOf(".html") == -1 ? ".html" : "")
-		)
-	) {
-		res.sendFile(
-			__dirname +
-				"/public/html/" +
-				req.params.slug +
-				(req.params.slug.indexOf(".html") == -1 ? ".html" : "")
-		);
+	} else if (fs.existsSync(dir)) {
+		res.sendFile(dir);
 	} else {
 		res.sendFile(__dirname + "/public/404.html");
 	}
