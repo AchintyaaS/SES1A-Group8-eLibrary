@@ -1,25 +1,29 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const fs = require("fs");
 
-const app = express();
-const router = express.Router();
+const authRouter = require("./src/auth");
+const apiRouter = require("./src/api");
 
-//listen for requests on the root path
-router.get("/", (req, res) => {
-	console.log("ROOT");
-	res.sendFile(__dirname + "/public/index.html");
-});
+const app = express();
+
+//static file serving
+app.use(express.static("public"));
+
+//middleware for parsing data
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+//route authentication calls
+app.post("/register", authRouter);
 
 //listen for api calls
-router.get("/api/:endpoint", (req, res, next) => {
-	res.json({
-		endpoint: req.params.endpoint,
-	}).status(200);
-});
+app.get("/api/:endpoint", apiRouter);
 
 //redirect files other than index
-router.get("/:slug?", (req, res, next) => {
-	console.log(req.params.slug);
+app.get("/:slug?", (req, res, next) => {
+	console.log("SLUG " + req.params.slug);
 	const dir =
 		__dirname +
 		"/public/html/" +
@@ -29,14 +33,12 @@ router.get("/:slug?", (req, res, next) => {
 	if (req.params.slug.indexOf(".") != -1) {
 		next();
 	} else if (fs.existsSync(dir)) {
+		console.log(req.cookies);
 		res.sendFile(dir);
 	} else {
 		res.sendFile(__dirname + "/public/404.html");
 	}
 });
-
-app.use("/", router);
-app.use(express.static("public"));
 
 //start the server on default port 80
 app.listen(process.env.PORT || 80, () => {
