@@ -2,10 +2,18 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
 
-const authRouter = require("./src/auth");
+const { authenticate_token, auth: authRouter } = require("./src/auth");
 const apiRouter = require("./src/api");
 
 const app = express();
+
+/** Checks wether or not a JSON Object is empty
+ *  @param {object} object JSON Object
+ *  @returns {boolean} true or false
+ */
+const is_empty = (object) => {
+	return !(object && Object.keys(object).length > 0);
+};
 
 //static file serving
 app.use(express.static("public"));
@@ -23,17 +31,31 @@ app.get("/api/:endpoint", apiRouter);
 
 //redirect files other than index
 app.get("/:slug?", (req, res, next) => {
-	console.log("SLUG " + req.params.slug);
+	//get data from request
+	const slug = req.params.slug,
+		LOGIN_INFO = req.cookies.LOGIN_INFO;
+	//dir is the target document's path
 	const dir =
 		__dirname +
 		"/public/html/" +
-		req.params.slug +
-		(req.params.slug.indexOf(".html") == -1 ? ".html" : "");
+		slug +
+		(slug.indexOf(".html") == -1 ? ".html" : "");
 
-	if (req.params.slug.indexOf(".") != -1) {
+	if (slug.indexOf(".") != -1) {
 		next();
 	} else if (fs.existsSync(dir)) {
-		console.log(req.cookies);
+		if (LOGIN_INFO && !is_empty(authenticate_token(LOGIN_INFO))) {
+			if (slug === "register" || slug === "login") {
+				res.redirect("/");
+				return;
+			}
+		} else {
+			if (!(slug === "register") && !(slug === "login")) {
+				res.redirect("/register"); //change to login later
+				return;
+			}
+		}
+
 		res.sendFile(dir);
 	} else {
 		res.sendFile(__dirname + "/public/404.html");

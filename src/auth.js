@@ -26,7 +26,18 @@ const create_token = (payload) => {
  *  @param {string} token JWT token
  *  @returns {object} token payload
  */
-const authenticate_token = (token) => {};
+const authenticate_token = (token) => {
+	let res = {};
+
+	if (token == null) return res;
+
+	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
+		if (err) console.log(err);
+		res = payload;
+	});
+
+	return res;
+};
 
 //login with bcrypt.compareSync(string, hashedpass)
 
@@ -55,14 +66,11 @@ auth.post("/register", (req, res, next) => {
 
 		users.push(user);
 
-		res.cookie("LOGIN_INFO", access_token, {
-			httpOnly: true,
-			//secure: true,
-		});
+		res.cookie("LOGIN_INFO", access_token, { httpOnly: true });
 		res.redirect("/register");
 	}
 
 	console.log(users);
 });
 
-module.exports = auth;
+module.exports = { auth, authenticate_token };
