@@ -44,6 +44,7 @@ app.get("/:slug?", (req, res, next) => {
 	if (slug.indexOf(".") != -1) {
 		next();
 	} else if (fs.existsSync(dir)) {
+		//redirect rules if or not authenticated
 		if (LOGIN_INFO && !is_empty(authenticate_token(LOGIN_INFO))) {
 			if (slug === "register" || slug === "login") {
 				res.redirect("/");
