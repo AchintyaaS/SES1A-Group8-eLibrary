@@ -3,6 +3,7 @@ require("dotenv").config();
 const auth = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const send_mail = require("./gmail");
 const { userModel: user, close } = require("./mongo/mongo");
 
 const TEXT_MAP = {
@@ -93,8 +94,8 @@ auth.post("/login", async (req, res, next) => {
 		!email ||
 		!password ||
 		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
-		(!(String(email).indexOf("@student.uni.edu.au") != -1) &&
-			!(String(email).indexOf("@uni.edu.au") != -1)) ||
+		(!(String(email).indexOf("@student.") != -1) &&
+			!(String(email).indexOf(".edu.au") != -1)) ||
 		PASSWORD_REGEX.test(String(password)) ||
 		String(password).length > 20
 	) {
@@ -146,8 +147,8 @@ auth.post("/register", async (req, res, next) => {
 		!email ||
 		!password ||
 		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
-		(!(String(email).indexOf("@student.uni.edu.au") != -1) &&
-			!(String(email).indexOf("@uni.edu.au") != -1)) ||
+		(!(String(email).indexOf("@student.") != -1) &&
+			!(String(email).indexOf(".edu.au") != -1)) ||
 		PASSWORD_REGEX.test(String(password)) ||
 		String(password).length > 20
 	) {
@@ -179,7 +180,9 @@ auth.post("/register", async (req, res, next) => {
 			expires: new Date(new Date().getTime() + EXPIRE_TIME),
 		});
 
+		//adds the user to the database and sends an email
 		user.insertMany([user_doc]);
+		send_mail(email);
 
 		//set login info cookie on client
 		res.cookie("LOGIN_INFO", access_token, {

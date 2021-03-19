@@ -12,8 +12,8 @@ const validate = () => {
 	//validate email
 	if (
 		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
-		(!(String(email).indexOf("@student.uni.edu.au") != -1) &&
-			!(String(email).indexOf("@uni.edu.au") != -1))
+		(!(String(email).indexOf("@student.") != -1) &&
+			!(String(email).indexOf(".edu.au") != -1))
 	) {
 		send_err(
 			"error-email",
