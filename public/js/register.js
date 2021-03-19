@@ -26,13 +26,32 @@ const validate = () => {
 	if (PASSWORD_REGEX.test(String(password)) || String(password).length > 20) {
 		send_err(
 			"error-password",
-			"Passwords must be at 8-20 characters long, contain an uppercase and lowercase letter, a number and a special character! "
+			"Passwords must be at 8-20 characters long, contain an uppercase and lowercase letter, atleast one number and special character! "
 		);
 		return;
 	}
 
 	//sends a register request
-	document.getElementById("form").submit();
+	//document.getElementById("form").submit();
+	fetch("/register", {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			email: email,
+			password: password,
+		}),
+	})
+		.then((res) => res.json())
+		.then((data) => {
+			if (data.error_msg) {
+				send_err("error-email", data.error_msg);
+			} else {
+				window.location.replace(window.location.origin);
+			}
+		});
 };
 
 /** Displays the error message onto the page

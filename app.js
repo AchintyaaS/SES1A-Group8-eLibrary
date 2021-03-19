@@ -25,6 +25,8 @@ app.use(express.urlencoded({ extended: false }));
 
 //route authentication calls
 app.post("/register", authRouter);
+app.post("/login", authRouter);
+app.get("/logout", authRouter);
 app.get("/getUserData", authRouter);
 
 //listen for api calls
@@ -53,7 +55,7 @@ app.get("/:slug?", (req, res, next) => {
 			}
 		} else {
 			if (!(slug === "register") && !(slug === "login")) {
-				res.redirect("/register"); //change to login later
+				res.redirect("/login");
 				return;
 			}
 		}

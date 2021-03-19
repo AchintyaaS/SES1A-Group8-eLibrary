@@ -1,4 +1,5 @@
 //gets public user data
 getUserData().then((user) => {
-	console.log(user);
+	document.getElementById("username").innerText = user.username;
+	document.getElementById("role").innerText = user.role_text;
 });
