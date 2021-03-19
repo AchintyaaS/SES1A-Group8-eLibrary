@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //route authentication calls
 app.post("/register", authRouter);
+app.get("/getUserData", authRouter);
 
 //listen for api calls
 app.get("/api/:endpoint", apiRouter);

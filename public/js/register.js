@@ -10,8 +10,15 @@ const validate = () => {
 	const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*)$/;
 
 	//validate email
-	if (!EMAIL_REGEX.test(String(email).toLowerCase())) {
-		send_err("error-email", "Invalid email format!");
+	if (
+		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
+		(!(String(email).indexOf("@student.uni.edu.au") != -1) &&
+			!(String(email).indexOf("@uni.edu.au") != -1))
+	) {
+		send_err(
+			"error-email",
+			"Invalid email format! name@student.uni.edu.au or name@uni.edu.au"
+		);
 		return;
 	}
 

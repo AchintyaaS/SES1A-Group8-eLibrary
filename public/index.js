@@ -1,1 +1,4 @@
-console.log("GOT");
+//gets public user data
+getUserData().then((user) => {
+	console.log(user);
+});
