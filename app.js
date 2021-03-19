@@ -1,42 +1,70 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const fs = require("fs");
 
-const app = express();
-const router = express.Router();
+const { authenticate_token, auth: authRouter } = require("./src/auth");
+const apiRouter = require("./src/api");
 
-//listen for requests on the root path
-router.get("/", (req, res) => {
-	console.log("ROOT");
-	res.sendFile(__dirname + "/public/index.html");
-});
+const app = express();
+
+/** Checks wether or not a JSON Object is empty
+ *  @param {object} object JSON Object
+ *  @returns {boolean} true or false
+ */
+const is_empty = (object) => {
+	return !(object && Object.keys(object).length > 0);
+};
+
+//static file serving
+app.use(express.static("public"));
+
+//middleware for parsing data
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+//route authentication calls
+app.post("/register", authRouter);
+app.post("/login", authRouter);
+app.get("/logout", authRouter);
+app.get("/getUserData", authRouter);
 
 //listen for api calls
-router.get("/api/:endpoint", (req, res, next) => {
-	res.json({
-		endpoint: req.params.endpoint,
-	}).status(200);
-});
+app.get("/api/:endpoint", apiRouter);
 
 //redirect files other than index
-router.get("/:slug?", (req, res, next) => {
-	console.log(req.params.slug);
+app.get("/:slug?", (req, res, next) => {
+	//get data from request
+	const slug = req.params.slug,
+		LOGIN_INFO = req.cookies.LOGIN_INFO;
+	//dir is the target document's path
 	const dir =
 		__dirname +
 		"/public/html/" +
-		req.params.slug +
-		(req.params.slug.indexOf(".html") == -1 ? ".html" : "");
+		slug +
+		(slug.indexOf(".html") == -1 ? ".html" : "");
 
-	if (req.params.slug.indexOf(".") != -1) {
+	if (slug.indexOf(".") != -1) {
 		next();
 	} else if (fs.existsSync(dir)) {
+		//redirect rules if or not authenticated
+		if (LOGIN_INFO && !is_empty(authenticate_token(LOGIN_INFO))) {
+			if (slug === "register" || slug === "login") {
+				res.redirect("/");
+				return;
+			}
+		} else {
+			if (!(slug === "register") && !(slug === "login")) {
+				res.redirect("/login");
+				return;
+			}
+		}
+
 		res.sendFile(dir);
 	} else {
 		res.sendFile(__dirname + "/public/404.html");
 	}
 });
-
-app.use("/", router);
-app.use(express.static("public"));
 
 //start the server on default port 80
 app.listen(process.env.PORT || 80, () => {

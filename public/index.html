@@ -7,10 +7,16 @@
     <title>Homepage</title>
 
     <link rel="stylesheet" href="index.css">
-    <script type="text/javascript" src="index.js"></script>
+    <!-- User Authentication -->
+    <script src="./js/lib/user.js"></script>
+
+    <script src="index.js"></script>
 </head>
 <body>
     <h1>This is the homepage.</h1>
+    <p>Welcome, <label id="username">user</label></p>
+    <p>Role : <label id="role">role</label></p>
     <div><a href="/ex">LINK</a></div>
+    <div><a href="/logout">LOGOUT</a></div>
 </body>
 </html>

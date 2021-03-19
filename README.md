@@ -34,6 +34,8 @@ Create a .env file to store the private mongo key
 touch .env
 ```
 
+Request the necessary environment variables from the project owners
+
 ## Running the app
 
 To start the server, run the following command on the project's root directory (app.js)
