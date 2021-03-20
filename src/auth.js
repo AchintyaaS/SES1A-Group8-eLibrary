@@ -50,10 +50,10 @@ const hash = (string) => {
 };
 
 /** Creates a JWT
- *  @param {object} payload payload
+ *  @param {object} user_doc user document
  * @returns {string} JWT Token
  */
-const create_token = (user) => {
+const create_token = (user_doc) => {
 	return jwt.sign(
 		{
 			username: user_doc.username,
@@ -134,7 +134,7 @@ auth.post("/login", async (req, res, next) => {
 
 		user_doc = matches;
 
-		const access_token = create_token(user);
+		const access_token = create_token(user_doc);
 
 		//set login info cookie on client
 		res.cookie("LOGIN_INFO", access_token, {
@@ -173,7 +173,7 @@ auth.post("/register", async (req, res, next) => {
 			role: String(email).indexOf("@student.") != -1 ? 1 : 2,
 		};
 
-		const access_token = create_token(user);
+		const access_token = create_token(user_doc);
 
 		//adds the user to the database and sends an email
 		user.insertMany([user_doc]);
