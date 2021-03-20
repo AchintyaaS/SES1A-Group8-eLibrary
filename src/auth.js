@@ -13,6 +13,25 @@ const TEXT_MAP = {
 	ERR_INVALID_LOGIN: "Invalid username or password",
 };
 const EXPIRE_TIME = 3_600_000;
+const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*)$/;
+
+/** Checks wether the email and password is valid
+ *  @param {string} email email
+ *  @param {string} password password
+ *  @returns {boolean} is valid.
+ */
+const is_valid_email_password = (email, password) => {
+	return (
+		!email ||
+		!password ||
+		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
+		(!(String(email).indexOf("@student.") != -1) &&
+			!(String(email).indexOf(".edu.au") != -1)) ||
+		PASSWORD_REGEX.test(String(password)) ||
+		String(password).length > 20
+	);
+};
 
 /** Checks wether or not a JSON Object is empty
  *  @param {object} object JSON Object
@@ -34,8 +53,16 @@ const hash = (string) => {
  *  @param {object} payload payload
  * @returns {string} JWT Token
  */
-const create_token = (payload) => {
-	return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
+const create_token = (user) => {
+	return jwt.sign(
+		{
+			username: user_doc.username,
+			email: user_doc.email,
+			role: user_doc.role,
+			expires: new Date(new Date().getTime() + EXPIRE_TIME),
+		},
+		process.env.ACCESS_TOKEN_SECRET
+	);
 };
 
 /** Verifies JWT authenticity
@@ -87,18 +114,7 @@ auth.post("/login", async (req, res, next) => {
 	var password = req.body.password;
 
 	//revalidate email and password
-	const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*)$/;
-
-	if (
-		!email ||
-		!password ||
-		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
-		(!(String(email).indexOf("@student.") != -1) &&
-			!(String(email).indexOf(".edu.au") != -1)) ||
-		PASSWORD_REGEX.test(String(password)) ||
-		String(password).length > 20
-	) {
+	if (is_valid_email_password(email, password)) {
 		res.json({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
 		return;
 	} else {
@@ -118,12 +134,7 @@ auth.post("/login", async (req, res, next) => {
 
 		user_doc = matches;
 
-		const access_token = create_token({
-			username: user_doc.username,
-			email: user_doc.email,
-			role: user_doc.role,
-			expires: new Date(new Date().getTime() + EXPIRE_TIME),
-		});
+		const access_token = create_token(user);
 
 		//set login info cookie on client
 		res.cookie("LOGIN_INFO", access_token, {
@@ -140,18 +151,7 @@ auth.post("/register", async (req, res, next) => {
 	var password = req.body.password;
 
 	//revalidate email and password
-	const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*)$/;
-
-	if (
-		!email ||
-		!password ||
-		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
-		(!(String(email).indexOf("@student.") != -1) &&
-			!(String(email).indexOf(".edu.au") != -1)) ||
-		PASSWORD_REGEX.test(String(password)) ||
-		String(password).length > 20
-	) {
+	if (is_valid_email_password(email, password)) {
 		res.json({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
 		return;
 	} else {
@@ -173,12 +173,7 @@ auth.post("/register", async (req, res, next) => {
 			role: String(email).indexOf("@student.") != -1 ? 1 : 2,
 		};
 
-		const access_token = create_token({
-			username: user_doc.username,
-			email: user_doc.email,
-			role: user_doc.role,
-			expires: new Date(new Date().getTime() + EXPIRE_TIME),
-		});
+		const access_token = create_token(user);
 
 		//adds the user to the database and sends an email
 		user.insertMany([user_doc]);
