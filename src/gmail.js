@@ -26,7 +26,6 @@ const send_mail = (recepient) => {
 	options.to = recepient;
 	mailer.sendMail(options, (err, res) => {
 		if (err) console.log(err);
-		else console.log(res);
 	});
 };
 
