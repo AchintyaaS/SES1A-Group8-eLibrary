@@ -16,6 +16,25 @@ const EXPIRE_TIME = 3_600_000;
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*)$/;
 
+/** Checks wether the email is valid
+ *  @param {string} email email
+ *  @returns {boolean} is valid.
+ */
+const is_valid_email = (email) => {
+	if (!email || !EMAIL_REGEX.test(String(email).toLowerCase())) return false;
+	const domain = String(email)
+		.substring(String(email).indexOf("@") + 1)
+		.split(".");
+	return !(domain.length < 3 || domain.length == 3
+		? domain[0] === "student" || domain[0] === "lib"
+		: false ||
+		  domain[domain.length - 2] + "." + domain[domain.length - 1] !==
+				"edu.au" ||
+		  domain.length == 4
+		? domain[0] !== "student" && domain[0] !== "lib"
+		: false);
+};
+
 /** Checks wether the email and password is valid
  *  @param {string} email email
  *  @param {string} password password
@@ -23,13 +42,10 @@ const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*
  */
 const is_valid_email_password = (email, password) => {
 	return (
-		!email ||
-		!password ||
-		!EMAIL_REGEX.test(String(email).toLowerCase()) ||
-		(!(String(email).indexOf("@student.") != -1) &&
-			!(String(email).indexOf(".edu.au") != -1)) ||
-		PASSWORD_REGEX.test(String(password)) ||
-		String(password).length > 20
+		password != null &&
+		!PASSWORD_REGEX.test(String(password)) &&
+		String(password).length < 20 &&
+		is_valid_email(email)
 	);
 };
 
@@ -114,7 +130,7 @@ auth.post("/login", async (req, res, next) => {
 	var password = req.body.password;
 
 	//revalidate email and password
-	if (is_valid_email_password(email, password)) {
+	if (!is_valid_email_password(email, password)) {
 		res.json({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
 		return;
 	} else {
@@ -151,7 +167,7 @@ auth.post("/register", async (req, res, next) => {
 	var password = req.body.password;
 
 	//revalidate email and password
-	if (is_valid_email_password(email, password)) {
+	if (!is_valid_email_password(email, password)) {
 		res.json({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
 		return;
 	} else {
