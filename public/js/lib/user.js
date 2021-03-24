@@ -2,7 +2,8 @@ const USER_TEXT_MAP = {
 	role: {
 		1: "Student",
 		2: "Staff",
-		3: "Admin",
+		3: "Librarian",
+		4: "Admin",
 	},
 };
 
@@ -22,7 +23,7 @@ function objectIsEmpty(object) {
 async function getUserData() {
 	try {
 		user = await (await fetch("/getUserData")).json();
-		if (objectIsEmpty(user)) window.location.replace("/register");
+		if (objectIsEmpty(user)) window.location.replace("/login");
 		user.role_text = USER_TEXT_MAP.role[user.role];
 		return user;
 	} catch (e) {
