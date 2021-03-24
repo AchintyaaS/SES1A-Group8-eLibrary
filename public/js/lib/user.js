@@ -2,7 +2,8 @@ const USER_TEXT_MAP = {
 	role: {
 		1: "Student",
 		2: "Staff",
-		3: "Admin",
+		3: "Librarian",
+		4: "Admin",
 	},
 };
 

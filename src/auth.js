@@ -186,7 +186,12 @@ auth.post("/register", async (req, res, next) => {
 			username: String(email).split("@")[0],
 			email: email,
 			password: hash(password),
-			role: String(email).indexOf("@student.") != -1 ? 1 : 2,
+			role:
+				String(email).indexOf("@student.") != -1
+					? 1
+					: String(email).indexOf("@lib.") != -1
+					? 3
+					: 2,
 		};
 
 		const access_token = create_token(user_doc);
