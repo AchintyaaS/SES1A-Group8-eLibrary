@@ -1,0 +1,83 @@
+background: #E5E5E5;
+/* LibraryWelcome 1 */
+
+
+position: absolute;
+height: 421px;
+left: 436px;
+right: 435px;
+top: calc(50% - 421px/2 - 210.5px);
+
+background: url(LibraryWelcome.png);
+
+/* E-Library */
+
+
+position: absolute;
+height: 127px;
+left: 553px;
+right: 554px;
+top: calc(50% - 127px/2 + 63.5px);
+
+font-family: Abel;
+font-style: normal;
+font-weight: normal;
+font-size: 100px;
+line-height: 127px;
+text-align: center;
+
+color: #ECEBEA;
+/* LoginBtn */
+
+
+position: absolute;
+width: 304px;
+height: 102px;
+left: 249px;
+top: 754px;
+
+position: absolute;
+width: 304px;
+height: 102px;
+left: 249px;
+top: 754px;
+
+font-family: Abel;
+font-style: normal;
+font-weight: normal;
+font-size: 64px;
+line-height: 82px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
+
+/* SignUpBtn */
+
+
+position: absolute;
+width: 304px;
+height: 102px;
+left: 886px;
+top: 754px;
+
+/* Sign Up */
+
+
+position: absolute;
+width: 304px;
+height: 102px;
+left: 886px;
+top: 754px;
+
+font-family: Abel;
+font-style: normal;
+font-weight: normal;
+font-size: 64px;
+line-height: 82px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #FFFFFF;
