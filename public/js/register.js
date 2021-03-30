@@ -1,6 +1,15 @@
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*)$/;
 
+/* Run on page load */
+window.onload = () => {
+	//attach event listeners to buttons
+	document.getElementById("login-btn").addEventListener("click", validate);
+	document.getElementById("register-btn").addEventListener("click", () => {
+		window.location = "/login";
+	});
+};
+
 /** Checks wether the email is valid
  *  @param {string} email email
  *  @returns {boolean} is valid.
@@ -31,7 +40,7 @@ const validate = () => {
 	//validate email
 	if (!is_valid_email(email)) {
 		send_err(
-			"error-email",
+			"error-msg",
 			"Invalid email format! name@student.uni.edu.au, name@lib.uni.edu.au or name@uni.edu.au"
 		);
 		return;
@@ -44,7 +53,7 @@ const validate = () => {
 		String(password).length > 20
 	) {
 		send_err(
-			"error-password",
+			"error-msg",
 			"Passwords must be at 8-20 characters long, contain an uppercase and lowercase letter, atleast one number and special character! "
 		);
 		return;
@@ -65,7 +74,7 @@ const validate = () => {
 		.then((res) => res.json())
 		.then((data) => {
 			if (data.error_msg) {
-				send_err("error-email", data.error_msg);
+				send_err("error-msg", data.error_msg);
 			} else {
 				window.location.replace(window.location.origin);
 			}
@@ -83,6 +92,6 @@ const send_err = (target, error_msg) => {
 
 /** Clears the error fields */
 const clear_err = () => {
-	send_err("error-email", "");
-	send_err("error-password", "");
+	send_err("error-msg", "");
+	send_err("error-msg", "");
 };
