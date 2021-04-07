@@ -13,4 +13,14 @@ api.get("/api/:endpoint", (req, res, next) => {
 	}).status(200);
 });
 
+api.get("/api/book/somebook", (req, res, next) => {
+	const {bookname} = req 
+	moogg
+	res.json({
+
+		book: "book",
+	}).status(200);
+});
+
+
 module.exports = api;
