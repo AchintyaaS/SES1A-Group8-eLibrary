@@ -12,6 +12,18 @@
 <script language="javascript" type="text/javascript">
 
 </script>
+<script type="text/javascript">
+    var outstandingfee = 300;
+    var outstandingFeeAlert =  (fee) => { 
+        if (fee>0) {
+            alert(`You have outstanding fee: ${fee} , please pay it ASAP, thanks`);
+        }
+    };
+    window.onload = outstandingFeeAlert(outstandingfee)
+    
+    
+
+    </script>
 
 <body>
     <h1>Customer id</h1>
@@ -19,14 +31,11 @@
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">Book Name</th>
-            <th scope="col">Author</th>
-            <th scope="col"></th>
-            <th scope="col">type</th>
-            <th scope="col">borrow date</th>
-            <th scope="col">due date</th>
-            <th scope="col">renew times</th>
-            <th scope="col">book return date</th>
+            <th scope="col">available books</th>
+            <th scope="col">information on date issued</th>
+            <th scope="col">due date for return</th>
+            <th scope="col">outstanding fees</th>
+         
               
           </tr>
         </thead>
@@ -40,39 +49,33 @@
             <td>jason</td>
             <td>Otto</td>
             <td>novel</td>
-            <td>28/03/2021</td>
-            <td>05/04/2021</td>
-            <td>1</td>
-            <td>04/04/2021</td>
+        
           </tr>
           <tr>
             <th scope="row">Stray Birds</th>
             <td>Jacob</td>
             <td>Thornton</td>
             <td>prose</td>
-            <td>28/03/2021</td>
-            <td>05/04/2021</td>
-            <td>0</td>
-            <td>04/04/2021</td>
+           
           </tr>
           <tr>
             <th scope="row">Jobs Autobiography</th>
             <td colspan="2">Larry the Bird</td>
             <td>biography</td>
-            <td>28/03/2021</td>
-            <td>05/04/2021</td>
-            <td>1</td>
-            <td>04/04/2021</td>
+           
           </tr>
         </tbody>
-      </table>
+      </table> 
     <h1>Books borrowed</h1>
     <td>uardian of the Rye；</td>
     <td>Stray Birds；</td>
     <td>Jobs Autobiography</td>
     <h1>Outstanding fee</h1>
     <td>0</td>
-    <button type="button" class="btn btn-outline-primary">PAY NOW</button>
+    <br />
+    <br />
+
+    <button type="button" class="btn btn-outline-primary">Notification</button>
 </body>
 
 </html>
