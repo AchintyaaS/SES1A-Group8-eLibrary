@@ -106,6 +106,19 @@ const authenticate_token = (token) => {
 	return res;
 };
 
+/** Handles CORS Pre-Flight Request
+ *  @param {object} res response object
+ *  @param {string} method request method
+ */
+const cors = (res, method) => {
+	res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+	res.set("Access-Control-Allow-Headers", "Content-Type");
+	res.set("Access-Control-Allow-Methods", method);
+	res.set("Access-Control-Allow-Credentials", true);
+
+	console.log("CORS " + method);
+};
+
 //login with bcrypt.compareSync(string, hashedpass)
 
 //get user info endpoint
@@ -115,13 +128,13 @@ auth.get("/getUserData", (req, res, next) => {
 		res.json(authenticate_token(access_token));
 		return;
 	}
-	res.json({});
+	res.send({ error: "ERR_NOT_LOGGED_IN" });
 });
 
 //logout endpoint
 auth.get("/logout", (req, res, next) => {
 	res.clearCookie("LOGIN_INFO");
-	res.redirect("/");
+	res.send({ redirect: "/" });
 });
 
 //login endpoint
@@ -131,7 +144,7 @@ auth.post("/login", async (req, res, next) => {
 
 	//revalidate email and password
 	if (!is_valid_email_password(email, password)) {
-		res.json({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
+		res.send({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
 		return;
 	} else {
 		//create user object
@@ -142,7 +155,7 @@ auth.post("/login", async (req, res, next) => {
 			matches == null ||
 			!bcrypt.compareSync(password, matches.password)
 		) {
-			res.json({
+			res.send({
 				error_msg: TEXT_MAP["ERR_INVALID_LOGIN"],
 			});
 			return;
@@ -157,7 +170,7 @@ auth.post("/login", async (req, res, next) => {
 			expires: new Date(new Date().getTime() + EXPIRE_TIME),
 			httpOnly: true,
 		});
-		res.json({});
+		res.send({});
 	}
 });
 

@@ -2,6 +2,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
 
+const cors = require("cors");
+
 const { authenticate_token, auth: authRouter } = require("./src/auth");
 const apiRouter = require("./src/api");
 
@@ -19,6 +21,7 @@ const is_empty = (object) => {
 //app.use(express.static("public"));
 
 //middleware for parsing data
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -67,6 +70,6 @@ app.get("/api/:endpoint", apiRouter);
 });*/
 
 //start the server on default port 80
-app.listen(process.env.PORT || 443, () => {
-	console.log("Listening on port 443...");
+app.listen(process.env.PORT || 90, () => {
+	console.log("Listening on port 90...");
 });
