@@ -170,7 +170,7 @@ auth.post("/login", async (req, res, next) => {
 			expires: new Date(new Date().getTime() + EXPIRE_TIME),
 			httpOnly: true,
 		});
-		res.send({});
+		res.send({ message: "success" });
 	}
 });
 

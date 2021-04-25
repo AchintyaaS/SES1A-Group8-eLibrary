@@ -4,7 +4,6 @@ import eyeopen from "../../img/password-eye-open.png";
 import eyeclosed from "../../img/password-eye-closed.png";
 
 function LTextBox(props) {
-	const [text, setText] = useState("");
 	const [show, setShow] = useState(false);
 
 	return (
@@ -27,9 +26,9 @@ function LTextBox(props) {
 			</div>
 			<input
 				type={show ? "text" : props.type}
-				value={text}
+				value={props.value}
 				onChange={(e) => {
-					setText(e.target.value);
+					props.onChange(e.target.value);
 				}}
 				placeholder={
 					props.tag === "Email ID"
@@ -42,9 +41,9 @@ function LTextBox(props) {
 					border:
 						"1px solid " +
 						(props.docondition
-							? props.condition(text)
+							? props.condition(props.value)
 								? "green"
-								: text.length > 0
+								: props.value.length > 0
 								? "red"
 								: "black"
 							: "black"),

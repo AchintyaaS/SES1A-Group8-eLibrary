@@ -1,11 +1,20 @@
 import { useState } from "react";
 import LButton from "../LButton/LButton";
 import LTextBox from "../LTextBox/LTextBox";
+import EzRedirect from "../EzRedirect/EzRedirect";
+
+const axios = require("axios").default;
+
+const login_url = "http://localhost:90/login";
+const register_url = "http://localhost:90/register";
 
 /** React Functional Component */
 function LoginRightCard(props) {
 	const [estate, setEState] = useState(false);
 	const [pstate, setPState] = useState(false);
+	const [e, setE] = useState("");
+	const [p, setP] = useState("");
+	const [r, setR] = useState(false);
 
 	function validateEmail(email) {
 		const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -20,14 +29,14 @@ function LoginRightCard(props) {
 			const domain = String(email)
 				.substring(String(email).indexOf("@") + 1)
 				.split(".");
-			return !(domain.length < 3 || domain.length == 3
+			return !(domain.length < 3 || domain.length === 3
 				? domain[0] === "student" || domain[0] === "lib"
 				: false ||
 				  domain[domain.length - 2] +
 						"." +
 						domain[domain.length - 1] !==
 						"edu.au" ||
-				  domain.length == 4
+				  domain.length === 4
 				? domain[0] !== "student" && domain[0] !== "lib"
 				: false);
 		};
@@ -49,6 +58,27 @@ function LoginRightCard(props) {
 		return res;
 	}
 
+	function login() {
+		if (!(pstate && estate)) return;
+		axios
+			.request({
+				url: login_url,
+				method: "post",
+				data: {
+					email: e,
+					password: p,
+				},
+				withCredentials: true,
+			})
+			.then((res) => {
+				console.log(res);
+				if (res.data.message) {
+					console.log("k");
+					setR(true);
+				}
+			});
+	}
+
 	return (
 		<div
 			className="login-right-card"
@@ -65,6 +95,7 @@ function LoginRightCard(props) {
 				boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
 			}}
 		>
+			{r ? <EzRedirect to="/" delay={0} /> : ""}
 			<div
 				className="login-right-title"
 				style={{
@@ -85,14 +116,22 @@ function LoginRightCard(props) {
 				type="email"
 				docondition={true}
 				condition={validateEmail}
+				value={e}
+				onChange={setE}
 			/>
 			<LTextBox
 				tag="Password"
 				type="password"
 				docondition={true}
 				condition={validatePassword}
+				value={p}
+				onChange={setP}
 			/>
-			<LButton text={props.title} clickable={estate && pstate} />
+			<LButton
+				text={props.title}
+				clickable={estate && pstate}
+				onClick={login}
+			/>
 		</div>
 	);
 }
