@@ -2,6 +2,8 @@ import os
 
 # This is a simple script to update the routes list in RouteManager
 
+ignore = ["temp", "NotFound", "EzRedirect"]
+
 def helper(component, header):
     try:
         if component.index(header) != -1:
@@ -19,7 +21,7 @@ def route(component):
 def proc(f):
     if len(f[0]) <= 1: return
     component = f[0][2:len(f[0])]
-    if(component == "temp" or component == "NotFound"): return
+    if(component in ignore): return
     print('"/' + route(component) + '": require(".' + (("/" + component) * 2) + '").default,')
 
 [proc(f) for f in os.walk(".")]
