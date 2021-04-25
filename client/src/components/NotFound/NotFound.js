@@ -1,32 +1,10 @@
-import { Redirect } from "react-router-dom";
-import { useEffect, useState } from "react";
-
-function Redr() {
-	return <Redirect to="/"></Redirect>;
-}
+import EzRedirect from "../EzRedirect/EzRedirect";
 
 function NotFound() {
-	const [redirect, setRedirect] = useState(false);
-
-	useEffect(() => {
-		let isMounted = true;
-		if (isMounted) wait();
-		return () => {
-			isMounted = false;
-		};
-	});
-
-	function wait() {
-		setTimeout(() => {
-			setRedirect(true);
-		}, 3000);
-	}
-
-	return redirect ? (
-		<Redr />
-	) : (
+	return (
 		<div>
-			<div>Page Not Found - Redirecting You...</div>
+			<EzRedirect delay={3000} to="/"></EzRedirect> Page Not Found -
+			Redirecting You...{" "}
 		</div>
 	);
 }
