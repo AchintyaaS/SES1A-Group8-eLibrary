@@ -100,7 +100,6 @@ function LoginRightCard(props) {
 				withCredentials: true,
 			})
 			.then((res) => {
-				console.log(res);
 				if (res.data.message) {
 					props.pushToast({
 						type: "notif",
