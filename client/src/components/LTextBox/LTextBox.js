@@ -39,7 +39,7 @@ function LTextBox(props) {
 					width: "80%",
 					height: "8vh",
 					border:
-						"1px solid " +
+						"2px solid " +
 						(props.docondition
 							? props.condition(props.value)
 								? "green"
@@ -68,7 +68,7 @@ function LTextBox(props) {
 						height: "4vh",
 						display: "block",
 						float: "right",
-						transform: "translate(-3.5vw, -5vh)",
+						transform: "translate(-3.7vw, -5vh)",
 					}}
 				>
 					<img
