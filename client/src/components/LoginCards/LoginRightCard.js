@@ -58,11 +58,11 @@ function LoginRightCard(props) {
 		return res;
 	}
 
-	function login() {
+	function auth(url) {
 		if (!(pstate && estate)) return;
 		axios
 			.request({
-				url: login_url,
+				url: url,
 				method: "post",
 				data: {
 					email: e,
@@ -95,7 +95,7 @@ function LoginRightCard(props) {
 				boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
 			}}
 		>
-			{r ? <EzRedirect to="/" delay={0} /> : ""}
+			<EzRedirect to="/" delay={0} doRedir={r} />
 			<div
 				className="login-right-title"
 				style={{
@@ -130,7 +130,9 @@ function LoginRightCard(props) {
 			<LButton
 				text={props.title}
 				clickable={estate && pstate}
-				onClick={login}
+				onClick={() => {
+					auth(props.mode === "login" ? login_url : register_url);
+				}}
 			/>
 		</div>
 	);
