@@ -12,6 +12,7 @@ const register_url = "http://localhost:90/register";
 function LoginRightCard(props) {
 	const [estate, setEState] = useState(false);
 	const [pstate, setPState] = useState(false);
+	//e -> email, p -> password, r -> redirect (boolean)
 	const [e, setE] = useState("");
 	const [p, setP] = useState("");
 	const [r, setR] = useState(false);
@@ -43,7 +44,10 @@ function LoginRightCard(props) {
 
 		let res = is_valid_email(email);
 
-		setEState(res);
+		setTimeout(() => {
+			setEState(res);
+		}, 0);
+
 		return res;
 	}
 
@@ -54,7 +58,9 @@ function LoginRightCard(props) {
 			PASSWORD_REGEX.test(String(password)) ||
 			String(password).length > 20
 		);
-		setPState(res);
+		setTimeout(() => {
+			setPState(res);
+		}, 0);
 		return res;
 	}
 
@@ -74,7 +80,9 @@ function LoginRightCard(props) {
 				console.log(res);
 				if (res.data.message) {
 					console.log("k");
-					setR(true);
+					setTimeout(() => {
+						setR(true);
+					}, 0);
 				}
 			});
 	}

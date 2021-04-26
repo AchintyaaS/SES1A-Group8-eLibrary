@@ -16,10 +16,11 @@ function Landing() {
 		});
 	});
 
-	return redirect ? (
-		<EzRedirect to={redirTo} delay={0} />
-	) : (
-		<div>Landing</div>
+	return (
+		<div>
+			Landing
+			<EzRedirect to={redirTo} delay={0} doRedir={redirect} />
+		</div>
 	);
 }
 

@@ -17,7 +17,7 @@ function EzRedirect(props) {
 		return () => clearTimeout(t);
 	});
 
-	return redirect || props.doRedir ? <Redirect to={props.to} /> : <></>;
+	return redirect && props.doRedir ? <Redirect to={props.to} /> : <></>;
 }
 
 export default EzRedirect;

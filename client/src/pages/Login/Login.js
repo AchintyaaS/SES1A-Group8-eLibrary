@@ -11,7 +11,10 @@ function Login() {
 
 	useEffect(() => {
 		getUserData().then((res) => {
-			if (!res.error) setRedir(true);
+			console.log(!res.error);
+			if (!res.error) {
+				setRedir(true);
+			}
 		});
 	});
 
