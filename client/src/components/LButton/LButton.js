@@ -2,7 +2,7 @@ function LButton(props) {
 	return (
 		<div
 			className={"unselectable" + (props.clickable ? " btn" : "")}
-			onClick={props.onClick}
+			onClick={props.clickable ? props.onClick : () => {}}
 			style={{
 				width: "80%",
 				height: "8vh",

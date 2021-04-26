@@ -18,6 +18,7 @@ function LoginLeftCard() {
 			}}
 		>
 			<img
+				className="unselectable"
 				style={{
 					width: "80%",
 					transform: "translateX(-3%)",

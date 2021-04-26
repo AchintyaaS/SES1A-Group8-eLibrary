@@ -6,7 +6,9 @@ import EzRedirect from "../../components/EzRedirect/EzRedirect";
 
 import { getUserData } from "../../lib/user";
 
-function Register() {
+import binder from "../../img/book-binder.png";
+
+function Register(props) {
 	const [redir, setRedir] = useState(false);
 
 	useEffect(() => {
@@ -29,7 +31,68 @@ function Register() {
 				title="Register"
 				mode="register"
 				btnText="Register"
+				pushToast={props.pushToast}
 			/>
+			<div
+				style={{
+					width: "100vw",
+					height: "100%",
+					position: "absolute",
+					marginTop: "28vh",
+					pointerEvents: "none",
+				}}
+			>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+			</div>
 		</div>
 	);
 }

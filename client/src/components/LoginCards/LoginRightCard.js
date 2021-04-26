@@ -16,6 +16,7 @@ function LoginRightCard(props) {
 	const [e, setE] = useState("");
 	const [p, setP] = useState("");
 	const [r, setR] = useState(false);
+	const [toR, setToR] = useState("/");
 
 	function validateEmail(email) {
 		const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -65,7 +66,13 @@ function LoginRightCard(props) {
 	}
 
 	function auth(url) {
-		if (!(pstate && estate)) return;
+		if (!(pstate && estate)) {
+			props.pushToast({
+				type: "error",
+				text: "Invalid email or password",
+			});
+			return;
+		}
 		axios
 			.request({
 				url: url,
@@ -79,11 +86,19 @@ function LoginRightCard(props) {
 			.then((res) => {
 				console.log(res);
 				if (res.data.message) {
-					console.log("k");
+					props.pushToast({
+						type: "notif",
+						text: res.data.message,
+					});
 					setTimeout(() => {
 						setR(true);
 					}, 0);
+					return;
 				}
+				props.pushToast({
+					type: "error",
+					text: res.data.error,
+				});
 			});
 	}
 
@@ -103,7 +118,7 @@ function LoginRightCard(props) {
 				boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
 			}}
 		>
-			<EzRedirect to="/" delay={0} doRedir={r} />
+			<EzRedirect to={toR} delay={0} doRedir={r} />
 			<div
 				className="login-right-title"
 				style={{
@@ -142,6 +157,32 @@ function LoginRightCard(props) {
 					auth(props.mode === "login" ? login_url : register_url);
 				}}
 			/>
+			<span
+				style={{
+					display: "block",
+					textAlign: "center",
+					marginTop: "1vh",
+				}}
+			>
+				{props.mode === "login"
+					? "Don't have an account? "
+					: "Already have an account? "}
+			</span>
+			<div
+				onClick={() => {
+					setToR(props.mode === "login" ? "/register" : "/login");
+					setR(true);
+				}}
+				className="unselectable"
+				style={{
+					display: "block",
+					textAlign: "center",
+					color: "blue",
+					cursor: "pointer",
+				}}
+			>
+				{props.mode === "login" ? "Register" : "Login"}
+			</div>
 		</div>
 	);
 }

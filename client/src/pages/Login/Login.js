@@ -6,12 +6,13 @@ import EzRedirect from "../../components/EzRedirect/EzRedirect";
 
 import { getUserData } from "../../lib/user";
 
-function Login() {
+import binder from "../../img/book-binder.png";
+
+function Login(props) {
 	const [redir, setRedir] = useState(false);
 
 	useEffect(() => {
 		getUserData().then((res) => {
-			console.log(!res.error);
 			if (!res.error) {
 				setRedir(true);
 			}
@@ -28,7 +29,72 @@ function Login() {
 		>
 			<EzRedirect to="/" delay={0} doRedir={redir} />
 			<LoginLeftCard />
-			<LoginRightCard title="Login" mode="login" btnText="Log In" />
+			<LoginRightCard
+				pushToast={props.pushToast}
+				title="Login"
+				mode="login"
+				btnText="Log In"
+			/>
+			<div
+				style={{
+					width: "100vw",
+					height: "100%",
+					position: "absolute",
+					marginTop: "28vh",
+					pointerEvents: "none",
+				}}
+			>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+				<img
+					className="unselectable"
+					src={binder}
+					style={{
+						width: "4vw",
+						display: "block",
+						margin: "auto",
+						marginBottom: "5vh",
+					}}
+				/>
+			</div>
 		</div>
 	);
 }
