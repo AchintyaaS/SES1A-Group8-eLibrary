@@ -28,19 +28,18 @@ function LoginRightCard(props) {
 		const is_valid_email = (email) => {
 			if (!email || !EMAIL_REGEX.test(String(email).toLowerCase()))
 				return false;
-			const domain = String(email)
+			const host = String(email)
 				.substring(String(email).indexOf("@") + 1)
 				.split(".");
-			return !(domain.length < 3 || domain.length === 3
-				? domain[0] === "student" || domain[0] === "lib"
-				: false ||
-				  domain[domain.length - 2] +
-						"." +
-						domain[domain.length - 1] !==
-						"edu.au" ||
-				  domain.length === 4
-				? domain[0] !== "student" && domain[0] !== "lib"
-				: false);
+			return (
+				3 <= host.length &&
+				host.length <= 4 &&
+				(host.length === 4
+					? host[0] === "student" || host[0] === "lib"
+					: true) &&
+				host[host.length - 2] + host[host.length - 1] === "eduau" &&
+				host[host.length === 4 ? 1 : 0].length > 0
+			);
 		};
 
 		let res = is_valid_email(email);
@@ -51,6 +50,23 @@ function LoginRightCard(props) {
 
 		return res;
 	}
+	/*const is_valid_email = (email) => {
+				if (!email || !EMAIL_REGEX.test(String(email).toLowerCase()))
+					return false;
+				const domain = String(email)
+					.substring(String(email).indexOf("@") + 1)
+					.split(".");
+				return !(domain.length < 3 || domain.length === 3
+					? domain[0] === "student" || domain[0] === "lib"
+					: false ||
+					  domain[domain.length - 2] +
+							"." +
+							domain[domain.length - 1] !==
+							"edu.au" ||
+					  domain.length === 4
+					? domain[0] !== "student" && domain[0] !== "lib"
+					: false);
+			};*/
 
 	function validatePassword(password) {
 		const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*)$/;
