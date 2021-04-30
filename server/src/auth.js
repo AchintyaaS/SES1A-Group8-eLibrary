@@ -8,9 +8,12 @@ const { userModel: user, close } = require("./mongo/mongo");
 
 const TEXT_MAP = {
 	ERR_EMAIL_USED: "A user has already registered with that email",
-	ERR_INVALID_EMAIL_PASSWORD:
-		"Unable to process your request, please check that your email and password meets the requirements",
-	ERR_INVALID_LOGIN: "Invalid username or password",
+	ERR_INVALID_EMAIL_PASSWORD: "Fatal Error: Invalid Email or Password",
+	ERR_INVALID_LOGIN: "Incorrect username or password",
+	ERR_NOT_LOGGED_IN: "You have to be logged in to do that.",
+	SUCCESS_LOGOUT: "Logged out successfully.",
+	SUCCESS_LOGIN: "Welcome, ",
+	SUCCESS_UPDATE: "Details Changed successfully."
 };
 const EXPIRE_TIME = 3_600_000;
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -22,17 +25,18 @@ const PASSWORD_REGEX = /^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*|[^\s]*\s.*
  */
 const is_valid_email = (email) => {
 	if (!email || !EMAIL_REGEX.test(String(email).toLowerCase())) return false;
-	const domain = String(email)
+	const host = String(email)
 		.substring(String(email).indexOf("@") + 1)
 		.split(".");
-	return !(domain.length < 3 || domain.length == 3
-		? domain[0] === "student" || domain[0] === "lib"
-		: false ||
-		  domain[domain.length - 2] + "." + domain[domain.length - 1] !==
-				"edu.au" ||
-		  domain.length == 4
-		? domain[0] !== "student" && domain[0] !== "lib"
-		: false);
+	return (
+		3 <= host.length &&
+		host.length <= 4 &&
+		(host.length === 4
+			? host[0] === "student" || host[0] === "lib"
+			: true) &&
+		host[host.length - 2] + host[host.length - 1] === "eduau" &&
+		host[host.length === 4 ? 1 : 0].length > 0
+	);
 };
 
 /** Checks wether the email and password is valid
@@ -106,7 +110,18 @@ const authenticate_token = (token) => {
 	return res;
 };
 
-//login with bcrypt.compareSync(string, hashedpass)
+/*/** Handles CORS Pre-Flight Request
+ *  @param {object} res response object
+ *  @param {string} method request method
+ *
+const cors = (res, method) => {
+	res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+	res.set("Access-Control-Allow-Headers", "Content-Type");
+	res.set("Access-Control-Allow-Methods", method);
+	res.set("Access-Control-Allow-Credentials", true);
+
+	console.log("CORS " + method);
+};*/
 
 //get user info endpoint
 auth.get("/getUserData", (req, res, next) => {
@@ -115,13 +130,13 @@ auth.get("/getUserData", (req, res, next) => {
 		res.json(authenticate_token(access_token));
 		return;
 	}
-	res.json({});
+	res.send({ error: TEXT_MAP["ERR_NOT_LOGGED_IN"] });
 });
 
 //logout endpoint
 auth.get("/logout", (req, res, next) => {
 	res.clearCookie("LOGIN_INFO");
-	res.redirect("/");
+	res.send({ redirect: "/", message: "Logged out successfully." });
 });
 
 //login endpoint
@@ -131,7 +146,7 @@ auth.post("/login", async (req, res, next) => {
 
 	//revalidate email and password
 	if (!is_valid_email_password(email, password)) {
-		res.json({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
+		res.send({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
 		return;
 	} else {
 		//create user object
@@ -142,8 +157,8 @@ auth.post("/login", async (req, res, next) => {
 			matches == null ||
 			!bcrypt.compareSync(password, matches.password)
 		) {
-			res.json({
-				error_msg: TEXT_MAP["ERR_INVALID_LOGIN"],
+			res.send({
+				error: TEXT_MAP["ERR_INVALID_LOGIN"],
 			});
 			return;
 		}
@@ -157,7 +172,7 @@ auth.post("/login", async (req, res, next) => {
 			expires: new Date(new Date().getTime() + EXPIRE_TIME),
 			httpOnly: true,
 		});
-		res.json({});
+		res.send({ message: TEXT_MAP["SUCCESS_LOGIN"] + user_doc.username });
 	}
 });
 
@@ -168,7 +183,7 @@ auth.post("/register", async (req, res, next) => {
 
 	//revalidate email and password
 	if (!is_valid_email_password(email, password)) {
-		res.json({ error_msg: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
+		res.json({ error: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
 		return;
 	} else {
 		//create user object
@@ -177,7 +192,7 @@ auth.post("/register", async (req, res, next) => {
 		const matches = await user.findOne(user_doc);
 		if (matches) {
 			res.json({
-				error_msg: TEXT_MAP["ERR_EMAIL_USED"],
+				error: TEXT_MAP["ERR_EMAIL_USED"],
 			});
 			return;
 		}
@@ -205,8 +220,57 @@ auth.post("/register", async (req, res, next) => {
 			expires: new Date(new Date().getTime() + EXPIRE_TIME),
 			httpOnly: true,
 		});
-		res.json({});
+		res.json({ message: TEXT_MAP["SUCCESS_LOGIN"] + user_doc.username });
 	}
 });
 
+auth.post("/updatedetails", async (req, res, next) => {
+	const email = req.body.email;
+	var password = req.body.password;
+	var access_token = req.cookies.LOGIN_INFO;
+	
+	let userdetails = authenticate_token(access_token);
+
+
+	//revalidate email and password
+	if (!is_valid_email_password(email, password)) {
+		res.json({ error: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
+		return;
+	} else {
+		//create user object
+		let user_doc = { email: email };
+
+		var matches = await user.findOne(user_doc);
+		if (matches && email !== userdetails.email ) {
+			res.json({
+				error: TEXT_MAP["ERR_EMAIL_USED"],
+			});
+			return;
+			
+		}
+		user_doc.email = userdetails.email;
+		matches = await user.findOne(user_doc);
+		matches.email = email;
+		matches.password = hash(password);
+		user_doc = {
+			username: userdetails.username,
+			email: email,
+			password: hash(password),
+			role: userdetails.role,
+			
+		};
+
+		const access_token = create_token(user_doc);
+
+		//adds the user to the database and sends an email
+		matches.save();		
+
+		//set login info cookie on client
+		res.cookie("LOGIN_INFO", access_token, {
+			expires: new Date(new Date().getTime() + EXPIRE_TIME),
+			httpOnly: true,
+		});
+		res.json({ message: TEXT_MAP["SUCCESS_UPDATE"] + user_doc.username });
+	}
+});
 module.exports = { auth, authenticate_token };

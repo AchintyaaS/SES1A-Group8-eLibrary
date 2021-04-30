@@ -2,6 +2,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
 
+const cors = require("cors");
+
 const { authenticate_token, auth: authRouter } = require("./src/auth");
 const apiRouter = require("./src/api");
 
@@ -16,9 +18,10 @@ const is_empty = (object) => {
 };
 
 //static file serving
-app.use(express.static("public"));
+//app.use(express.static("public"));
 
 //middleware for parsing data
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -26,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 //route authentication calls
 app.post("/register", authRouter);
 app.post("/login", authRouter);
+app.post("/updatedetails", authRouter);
 app.get("/logout", authRouter);
 app.get("/getUserData", authRouter);
 
@@ -33,7 +37,7 @@ app.get("/getUserData", authRouter);
 app.get("/api/:endpoint", apiRouter);
 
 //redirect files other than index
-app.get("/:slug?", (req, res, next) => {
+/*app.get("/:slug?", (req, res, next) => {
 	//get data from request
 	const slug = req.params.slug,
 		LOGIN_INFO = req.cookies.LOGIN_INFO;
@@ -64,9 +68,9 @@ app.get("/:slug?", (req, res, next) => {
 	} else {
 		res.sendFile(__dirname + "/public/404.html");
 	}
-});
+});*/
 
 //start the server on default port 80
-app.listen(process.env.PORT || 80, () => {
-	console.log("Listening on port 80...");
+app.listen(process.env.PORT || 90, () => {
+	console.log("Listening on port 90...");
 });
