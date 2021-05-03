@@ -72,6 +72,115 @@ app.post("/removebooks", function  (req, res){
   await Book.deleteOne({ISBN: bookdel });
 });
 
+//search a book
+
+app.post("/search-books", function (req,res){
+
+  const searchisbn= req.body.isbnSearch;
+  const searchAuth= req.body.authSearch;
+  const searchTitle= req.body.titleSearch;
+  const searchCat=req.body.catSearch;
+  const query;
+  const options;
+  const searchResult;
+
+  if(searchisbn!=null){
+
+    query= {ISBN: searchisbn};
+    options= {
+      sort: {ISBN: 1},
+      projection: { _id: 0, name: 1,
+        ISBN: 1,
+        author: 1,
+        publisher: 1,
+        issue: 1,
+        category: 1 },
+
+    };
+
+    searchResult= await Book.findOne(query, options);
+
+    //console.log (searchResult);
+  }
+
+  else if(searchTitle!=null){
+    query= {name: searchTitle};
+    options= {
+      sort: {ISBN: 1},
+      projection: { _id: 0, name: 1,
+        ISBN: 1,
+        author: 1,
+        publisher: 1,
+        issue: 1,
+        category: 1 },
+
+    };
+
+    searchResult= await Book.findOne(query, options);
+
+    //console.log (searchResult);
+  }
+
+    else if(searchAuth!=null){
+
+      if(searchCat!=null){
+        query={author: searchAuth, category: searchCat};
+      }
+      else
+      query= {author: searchAuth};
+
+      options= {
+        sort: {ISBN: 1},
+        projection: { _id: 0, name: 1,
+          ISBN: 1,
+          author: 1,
+          publisher: 1,
+          issue: 1,
+          category: 1 },
+  
+      };
+
+      const cursor = Book.find(query, options);
+
+      if ((await cursor.count()) === 0) {
+        console.log("No documents found!");
+      }
+      else{
+      while (await cursor.hasNext()) {
+        console.log(await cursor.next());
+      }}
+
+    }
+
+    else if(searchCat!=null){
+      query= {category: searchCat};
+
+      options= {
+        sort: {ISBN: 1},
+        projection: { _id: 0, name: 1,
+          ISBN: 1,
+          author: 1,
+          publisher: 1,
+          issue: 1,
+          category: 1 },
+  
+      };
+
+      const cursor = Book.find(query, options);
+
+      if ((await cursor.count()) === 0) {
+        console.log("No documents found!");
+      }
+      else{
+      while (await cursor.hasNext()) {
+        console.log(await cursor.next());
+      }}
+
+    } 
+
+});
+
+
 //server on default port 80
 app.listen(process.env.PORT || 80, () => {
 	console.log("Listening on port 80...")});
