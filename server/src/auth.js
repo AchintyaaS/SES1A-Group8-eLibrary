@@ -140,7 +140,7 @@ auth.get("/logout", (req, res, next) => {
 
 //login endpoint
 auth.post("/login", async (req, res, next) => {
-	const email = req.body.email;
+	const email = req.body.email.toLowerCase();
 	var password = req.body.password;
 
 	//revalidate email and password
@@ -177,7 +177,7 @@ auth.post("/login", async (req, res, next) => {
 
 //register endpoint
 auth.post("/register", async (req, res, next) => {
-	const email = req.body.email;
+	const email = req.body.email.toLowerCase();
 	var password = req.body.password;
 
 	//revalidate email and password

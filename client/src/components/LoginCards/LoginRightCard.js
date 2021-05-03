@@ -94,7 +94,7 @@ function LoginRightCard(props) {
 				url: url,
 				method: "post",
 				data: {
-					email: e,
+					email: e.toLowerCase(),
 					password: p,
 				},
 				withCredentials: true,
