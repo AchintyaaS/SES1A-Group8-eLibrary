@@ -1,32 +1,72 @@
-import { useEffect, useState } from "react";
-import EzRedirect from "../../components/EzRedirect/EzRedirect";
-import { getUserData, logout } from "../../lib/user";
+import { useEffect, useState } from 'react';
+import EzRedirect from '../../components/EzRedirect/EzRedirect';
+import NavBar from '../../components/NavBar/NavBar';
+import LButton from '../../components/LButton/LButton';
+import { getUserData, logout } from '../../lib/user';
 
-function Landing() {
-	const [user, setUser] = useState({});
-	const [redirect, setRedirect] = useState(false);
-	const [redirTo, setRedirTo] = useState("/");
+function Landing(props) {
+	const [
+		user,
+		setUser,
+	] = useState({});
+	const [
+		redirect,
+		setRedirect,
+	] = useState(false);
+	const [
+		redirTo,
+		setRedirTo,
+	] = useState('/');
+
+	const doLogout = () => {
+		logout();
+		setUser(null);
+		props.updateUser(null);
+		doRedir('/login');
+	};
+
+	const doRedir = (to) => {
+		setRedirTo(to);
+		setRedirect(true);
+	};
 
 	useEffect(() => {
-		// if not logged in then redirect to login
 		getUserData().then((res) => {
 			if (res.error) {
-				setRedirTo("/login");
-				setRedirect(true);
+				doLogout();
 			} else {
 				setUser(res);
+				props.updateUser(res);
 			}
 		});
-	});
+	}, []);
 
 	return (
 		<div>
+			{user ? <NavBar logout={doLogout} user={user} /> : ''}
 			Landing
 			<EzRedirect to={redirTo} delay={0} doRedir={redirect} />
-			{user ? Object.entries(user).map(([k, v]) => <div>{v}</div>) : ""}
-			<div onClick={logout} style={{ color: "blue", cursor: "pointer" }}>
-				Logout
-			</div>
+			{user ? (
+				Object.entries(user).map(([ k, v
+				]) => <div>{v}</div>)
+			) : (
+				''
+			)}
+			<LButton
+				text='Edit'
+				clickable={true}
+				onClick={() => {
+					doRedir('/');
+				}}
+				style={{
+					width: '5vw',
+					height: '3vh',
+					fontSize: '1vw',
+					padding: '0vh',
+					margin: 'none',
+					marginTop: '1vh',
+				}}
+			/>
 		</div>
 	);
 }
