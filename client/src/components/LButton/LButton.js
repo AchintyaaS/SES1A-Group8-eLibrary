@@ -10,7 +10,7 @@ function LButton(props) {
 				color: ostyle.color || 'white',
 				fontFamily: ostyle.fontFamily || 'Roboto Mono',
 				fontSize: ostyle.fontSize || '1.5vw',
-				padding: ostyle.padding || '1.5vh',
+				paddingTop: ostyle.paddingTop || '1.5vh',
 				textAlign: ostyle.textAlign || 'center',
 				display: ostyle.display || 'block',
 				margin: ostyle.margin || 'auto',

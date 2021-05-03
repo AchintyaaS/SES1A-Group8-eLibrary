@@ -43,7 +43,7 @@ function Landing(props) {
 
 	return (
 		<div>
-			{user ? <NavBar logout={doLogout} user={user} /> : ''}
+			{user ? <NavBar doRedir={doRedir} logout={doLogout} user={user} /> : ''}
 			Landing
 			<EzRedirect to={redirTo} delay={0} doRedir={redirect} />
 			{user ? (
@@ -61,9 +61,9 @@ function Landing(props) {
 				style={{
 					width: '5vw',
 					height: '3vh',
-					fontSize: '1vw',
-					padding: '0vh',
-					margin: 'none',
+					fontSize: '2vh',
+					paddingTop: '0vh',
+					margin: '1vw',
 					marginTop: '1vh',
 				}}
 			/>

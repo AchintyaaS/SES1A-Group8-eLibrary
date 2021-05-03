@@ -21,7 +21,9 @@ function NavBar(props) {
 					marginTop: '2vh',
 					marginLeft: '1vw',
 					fontSize: '1.4vw',
+					cursor: 'pointer',
 				}}
+				onClick={() => props.doRedir('/')}
 			>
 				E-Library
 			</div>
