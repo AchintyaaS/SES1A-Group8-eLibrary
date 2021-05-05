@@ -68,20 +68,20 @@ function RouterManager() {
 	function pushToast(toast) {
 		toast.key = randomKey();
 		setToasts([
-			<ToastItem key={toast.key} text={toast.text} type={toast.type} />,
+			<ToastItem pushDelToast={pushDelToast} key={toast.key} text={toast.text} type={toast.type} />,
 			...toasts,
 		]);
 		setTimeout(pushDelToast, 3000, toast.key);
 	}
 
-	function pushDelToast(key) {
+	const pushDelToast = (key) => {
 		setDelToasts([
 			...delToasts,
 			key,
 		]);
 		let temp = delToasts;
 		temp.push(key);
-	}
+	};
 
 	//get current route
 
