@@ -19,6 +19,7 @@ function Landing(props) {
 	] = useState('/');
 
 	const doLogout = () => {
+		props.pushToast({ type: 'info', text: 'You have been logged out.' });
 		logout();
 		setUser(null);
 		props.updateUser(null);
@@ -33,7 +34,7 @@ function Landing(props) {
 	useEffect(() => {
 		getUserData().then((res) => {
 			if (res.error) {
-				doLogout();
+				doRedir('/login');
 			} else {
 				setUser(res);
 				props.updateUser(res);
