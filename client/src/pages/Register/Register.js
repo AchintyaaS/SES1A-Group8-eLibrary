@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import LoginLeftCard from "../../components/LoginCards/LoginLeftCard";
-import LoginRightCard from "../../components/LoginCards/LoginRightCard";
-import EzRedirect from "../../components/EzRedirect/EzRedirect";
+import LoginLeftCard from '../../components/LoginCards/LoginLeftCard';
+import LoginRightCard from '../../components/LoginCards/LoginRightCard';
+import EzRedirect from '../../components/EzRedirect/EzRedirect';
 
-import { getUserData } from "../../lib/user";
+import { getUserData } from '../../lib/user';
 
-import binder from "../../img/book-binder.png";
+import binder from '../../img/book-binder.png';
 
 function Register(props) {
-	const [redir, setRedir] = useState(false);
+	const [
+		redir,
+		setRedir,
+	] = useState(false);
 
 	useEffect(() => {
 		getUserData().then((res) => {
@@ -19,77 +22,71 @@ function Register(props) {
 
 	return (
 		<div
-			className="main-container"
+			className='main-container'
 			style={{
-				height: "100vh",
-				backgroundColor: "rgba(240, 240, 225, 1)",
+				height: '100vh',
+				backgroundColor: 'rgba(240, 240, 225, 1)',
 			}}
 		>
-			<EzRedirect to="/" delay={0} doRedir={redir} />
+			<EzRedirect to='/' delay={0} doRedir={redir} />
 			<LoginLeftCard />
-			<LoginRightCard
-				title="Register"
-				mode="register"
-				btnText="Register"
-				pushToast={props.pushToast}
-			/>
+			<LoginRightCard title='Register' mode='register' btnText='Register' pushToast={props.pushToast} />
 			<div
 				style={{
-					width: "100vw",
-					height: "100%",
-					position: "absolute",
-					marginTop: "28vh",
-					pointerEvents: "none",
+					width: '100vw',
+					position: 'absolute',
+					marginTop: '28vh',
+					pointerEvents: 'none',
 				}}
 			>
 				<img
-					className="unselectable"
+					className='unselectable'
 					src={binder}
 					style={{
-						width: "4vw",
-						display: "block",
-						margin: "auto",
-						marginBottom: "5vh",
+						width: '4vw',
+						display: 'block',
+						margin: 'auto',
+						marginBottom: '5vh',
 					}}
 				/>
 				<img
-					className="unselectable"
+					className='unselectable'
 					src={binder}
 					style={{
-						width: "4vw",
-						display: "block",
-						margin: "auto",
-						marginBottom: "5vh",
+						width: '4vw',
+						display: 'block',
+						margin: 'auto',
+						marginBottom: '5vh',
 					}}
 				/>
 				<img
-					className="unselectable"
+					className='unselectable'
 					src={binder}
 					style={{
-						width: "4vw",
-						display: "block",
-						margin: "auto",
-						marginBottom: "5vh",
+						width: '4vw',
+						display: 'block',
+						margin: 'auto',
+						marginBottom: '5vh',
 					}}
 				/>
 				<img
-					className="unselectable"
+					className='unselectable'
 					src={binder}
 					style={{
-						width: "4vw",
-						display: "block",
-						margin: "auto",
-						marginBottom: "5vh",
+						width: '4vw',
+						display: 'block',
+						margin: 'auto',
+						marginBottom: '5vh',
 					}}
 				/>
 				<img
-					className="unselectable"
+					className='unselectable'
 					src={binder}
 					style={{
-						width: "4vw",
-						display: "block",
-						margin: "auto",
-						marginBottom: "5vh",
+						width: '4vw',
+						display: 'block',
+						margin: 'auto',
+						marginBottom: '5vh',
 					}}
 				/>
 			</div>
