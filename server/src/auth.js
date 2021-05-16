@@ -13,7 +13,6 @@ const TEXT_MAP = {
 	ERR_NOT_LOGGED_IN: "You have to be logged in to do that.",
 	SUCCESS_LOGOUT: "Logged out successfully.",
 	SUCCESS_LOGIN: "Welcome, ",
-	SUCCESS_UPDATE: "Details Changed successfully."
 };
 const EXPIRE_TIME = 3_600_000;
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -221,56 +220,6 @@ auth.post("/register", async (req, res, next) => {
 			httpOnly: true,
 		});
 		res.json({ message: TEXT_MAP["SUCCESS_LOGIN"] + user_doc.username });
-	}
-});
-
-auth.post("/updatedetails", async (req, res, next) => {
-	const email = req.body.email;
-	var password = req.body.password;
-	var access_token = req.cookies.LOGIN_INFO;
-	
-	let userdetails = authenticate_token(access_token);
-
-
-	//revalidate email and password
-	if (!is_valid_email_password(email, password)) {
-		res.json({ error: TEXT_MAP["ERR_INVALID_EMAIL_PASSWORD"] });
-		return;
-	} else {
-		//create user object
-		let user_doc = { email: email };
-
-		var matches = await user.findOne(user_doc);
-		if (matches && email !== userdetails.email ) {
-			res.json({
-				error: TEXT_MAP["ERR_EMAIL_USED"],
-			});
-			return;
-			
-		}
-		user_doc.email = userdetails.email;
-		matches = await user.findOne(user_doc);
-		matches.email = email;
-		matches.password = hash(password);
-		user_doc = {
-			username: userdetails.username,
-			email: email,
-			password: hash(password),
-			role: userdetails.role,
-			
-		};
-
-		const access_token = create_token(user_doc);
-
-		//adds the user to the database and sends an email
-		matches.save();		
-
-		//set login info cookie on client
-		res.cookie("LOGIN_INFO", access_token, {
-			expires: new Date(new Date().getTime() + EXPIRE_TIME),
-			httpOnly: true,
-		});
-		res.json({ message: TEXT_MAP["SUCCESS_UPDATE"] + user_doc.username });
 	}
 });
 
