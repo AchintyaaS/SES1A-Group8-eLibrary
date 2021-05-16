@@ -25,10 +25,14 @@ cd SES1A-Group8-eLibrary
 Install the project dependencies
 
 ```
-npm install
+cd client
+npm i
+
+cd ../server
+npm i
 ```
 
-Create a .env file to store the private mongo key
+Create a .env file in the server directory to store the private mongo key (./server)
 
 ```
 touch .env
@@ -38,10 +42,16 @@ Request the necessary environment variables from the project owners
 
 ## Running the app
 
-To start the server, run the following command on the project's root directory (app.js)
+To start the backend server, run the following command on the server directory (./server)
 
 ```
 node .
+```
+
+To start the react server, run the following command on the client directory in a separate command line (./client)
+
+```
+npm start
 ```
 
 The web app will be accessible on localhost at default web port 80.
