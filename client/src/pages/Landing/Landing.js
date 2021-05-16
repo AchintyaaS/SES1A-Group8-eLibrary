@@ -26,6 +26,10 @@ function Landing(props) {
 		doRedir('/login');
 	};
 
+	const firstCapitalize = (string) => {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	};
+
 	const doRedir = (to) => {
 		setRedirTo(to);
 		setRedirect(true);
@@ -45,29 +49,55 @@ function Landing(props) {
 	return (
 		<div>
 			{user ? <NavBar doRedir={doRedir} logout={doLogout} user={user} /> : ''}
-			Landing
 			<EzRedirect to={redirTo} delay={0} doRedir={redirect} />
-			{user ? (
-				Object.entries(user).map(([ k, v
-				]) => <div>{v}</div>)
-			) : (
-				''
-			)}
-			<LButton
-				text='Edit'
-				clickable={true}
-				onClick={() => {
-					doRedir('/');
-				}}
+			<div
 				style={{
-					width: '5vw',
-					height: '3vh',
-					fontSize: '2vh',
-					paddingTop: '0vh',
-					margin: '1vw',
-					marginTop: '1vh',
+					width: 'fit-content',
+					padding: '10px',
+					paddingBottom: 'none',
+					border: '2px solid',
+					borderColor: '#1034A6',
+					borderRadius: '15px',
+					backgroundColor: '#8cd3ff',
+					marginTop: '2vh',
+					marginLeft: '1vw',
 				}}
-			/>
+			>
+				<div style={{ margin: 'auto', textAlign: 'center' }}>User Details</div>
+				{user ? (
+					Object.entries(user).map(
+						(
+							[
+								k,
+								v,
+							],
+						) =>
+							k === 'username' || k === 'email' || k === 'role_text' ? (
+								<div>{(k === 'role_text' ? 'Role' : firstCapitalize(k)) + ': ' + v}</div>
+							) : (
+								''
+							),
+					)
+				) : (
+					''
+				)}
+				<LButton
+					text='Edit'
+					clickable={true}
+					onClick={() => {
+						doRedir('/');
+					}}
+					style={{
+						width: '5vw',
+						height: '3vh',
+						fontSize: '2vh',
+						paddingTop: '0vh',
+						margin: 'auto',
+						marginTop: '2vh',
+						marginBottom: '0px',
+					}}
+				/>
+			</div>
 		</div>
 	);
 }
