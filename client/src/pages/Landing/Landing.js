@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-import { useEffect, useState } from "react";
-import EzRedirect from "../../components/EzRedirect/EzRedirect";
-import { getUserData } from "../../lib/user";
-
-function Landing() {
-	const [redirect, setRedirect] = useState(false);
-	const [redirTo, setRedirTo] = useState("/");
-
-	useEffect(() => {
-		// if not logged in then redirect to login
-		getUserData().then((res) => {
-			if (res.error) {
-				setRedirTo("/login");
-				setRedirect(true);
-			}
-		});
-	});
-
-	return (
-		<div>
-			Landing
-			<EzRedirect to={redirTo} delay={0} doRedir={redirect} />
-=======
 import { useEffect, useState } from 'react';
 import EzRedirect from '../../components/EzRedirect/EzRedirect';
 import NavBar from '../../components/NavBar/NavBar';
@@ -122,7 +98,6 @@ function Landing(props) {
 					}}
 				/>
 			</div>
->>>>>>> b963dfd1d69c4fc98a50db08dfd0371bbbe97e4e
 		</div>
 	);
 }

@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-@import url("https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap");
-=======
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
->>>>>>> b963dfd1d69c4fc98a50db08dfd0371bbbe97e4e
+
 
 * {
   margin: 0;
@@ -12,21 +9,6 @@
   outline: 0;
   box-sizing: border-box;
 }
-
-<<<<<<< HEAD
-.unselectable {
-    user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-drag: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-}
-
-.btn:active {
-    transform: translateY(1px);
-}
-=======
 .navbar-username:hover {
   opacity: 0%;
 }
@@ -42,4 +24,3 @@
 .btn:active {
   transform: translateY(1px);
 }
->>>>>>> b963dfd1d69c4fc98a50db08dfd0371bbbe97e4e

@@ -13,10 +13,7 @@ const TEXT_MAP = {
 	ERR_NOT_LOGGED_IN: "You have to be logged in to do that.",
 	SUCCESS_LOGOUT: "Logged out successfully.",
 	SUCCESS_LOGIN: "Welcome, ",
-<<<<<<< HEAD:server/src/auth.js
 	SUCCESS_UPDATE: "Details Changed successfully."
-=======
->>>>>>> b963dfd1d69c4fc98a50db08dfd0371bbbe97e4e:src/auth.js
 };
 const EXPIRE_TIME = 3_600_000;
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -276,4 +273,5 @@ auth.post("/updatedetails", async (req, res, next) => {
 		res.json({ message: TEXT_MAP["SUCCESS_UPDATE"] + user_doc.username });
 	}
 });
+
 module.exports = { auth, authenticate_token };
