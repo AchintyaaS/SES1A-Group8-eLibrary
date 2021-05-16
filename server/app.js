@@ -29,7 +29,6 @@ app.use(express.urlencoded({ extended: false }));
 //route authentication calls
 app.post("/register", authRouter);
 app.post("/login", authRouter);
-app.post("/updatedetails", authRouter);
 app.get("/logout", authRouter);
 app.get("/getUserData", authRouter);
 
